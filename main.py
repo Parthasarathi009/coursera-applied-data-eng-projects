@@ -20,12 +20,15 @@ def extract_keywords(text):
 
 
 # create a function that makes hash tags
-def make_hashtags(keywords):
+def make_hashtags(keywords,tagslength=0):
     hashtags = []
     for keyword in keywords:
         hashtags.append("#" + keyword[0].replace(" ", ""))
-    return hashtags
-
+    if tagslength:
+        n =int(tagslength)
+        return hashtags[:n]
+    else:
+        return hashtags
 
 @click.group()
 def cli():
@@ -43,11 +46,12 @@ def extract(filename):
 
 @cli.command("hashtags")
 @click.argument("filename", default="text.txt")
-def hashtagscli(filename):
+@click.argument("tagslength", required=False)
+def hashtagscli(filename,tagslength):
     """Extract keywords from a file and make hashtags"""
     text = read_file(filename)
     keywords = extract_keywords(text)
-    hashtags = make_hashtags(keywords)
+    hashtags = make_hashtags(keywords,tagslength)
     click.echo(hashtags)
 
 
